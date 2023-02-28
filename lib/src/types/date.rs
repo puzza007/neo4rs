@@ -4,7 +4,9 @@ use chrono::{Duration, NaiveDate};
 use neo4rs_macros::BoltStruct;
 use std::convert::TryInto;
 
-#[derive(Debug, PartialEq, Clone, BoltStruct)]
+use serde::Serialize;
+
+#[derive(Debug, PartialEq, Clone, BoltStruct, Serialize)]
 #[signature(0xB1, 0x44)]
 pub struct BoltDate {
     days: BoltInteger,

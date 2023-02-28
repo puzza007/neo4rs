@@ -5,6 +5,9 @@ use std::cell::RefCell;
 use std::mem;
 use std::rc::Rc;
 
+use serde::Serialize;
+use serde::ser::Serializer;
+
 pub const SMALL: u8 = 0xCC;
 pub const MEDIUM: u8 = 0xCD;
 pub const LARGE: u8 = 0xCE;
@@ -69,6 +72,15 @@ impl BoltBytes {
         };
 
         Ok(BoltBytes::new(input.borrow_mut().split_to(size)))
+    }
+}
+
+impl Serialize for BoltBytes {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bytes(&self.value)
     }
 }
 

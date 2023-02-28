@@ -4,6 +4,9 @@ use bytes::*;
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use serde::Serialize;
+use serde::ser::Serializer;
+
 pub const FALSE: u8 = 0xC2;
 pub const TRUE: u8 = 0xC3;
 
@@ -39,6 +42,15 @@ impl BoltBoolean {
             FALSE => Ok(BoltBoolean::new(false)),
             _ => Err(Error::InvalidTypeMarker("invalid boolean marker".into())),
         }
+    }
+}
+
+impl Serialize for BoltBoolean {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_bool(self.value)
     }
 }
 

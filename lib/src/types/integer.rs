@@ -6,6 +6,9 @@ use std::mem;
 use std::ops::{Add, Sub};
 use std::rc::Rc;
 
+use serde::Serialize;
+use serde::ser::Serializer;
+
 pub const INT_8: u8 = 0xC8;
 pub const INT_16: u8 = 0xC9;
 pub const INT_32: u8 = 0xCA;
@@ -103,6 +106,15 @@ impl From<BoltInteger> for i64 {
 impl From<i32> for BoltInteger {
     fn from(value: i32) -> Self {
         BoltInteger::new(value as i64)
+    }
+}
+
+impl Serialize for BoltInteger {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_i64(self.value)
     }
 }
 

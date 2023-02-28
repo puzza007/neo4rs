@@ -7,6 +7,9 @@ use std::fmt::Display;
 use std::mem;
 use std::rc::Rc;
 
+use serde::Serialize;
+use serde::ser::Serializer;
+
 pub const TINY: u8 = 0x80;
 pub const SMALL: u8 = 0xD0;
 pub const MEDIUM: u8 = 0xD1;
@@ -54,6 +57,15 @@ impl From<String> for BoltString {
 impl From<BoltString> for String {
     fn from(value: BoltString) -> Self {
         value.value
+    }
+}
+
+impl Serialize for BoltString {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&self.value)
     }
 }
 

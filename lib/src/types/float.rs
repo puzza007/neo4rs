@@ -5,6 +5,9 @@ use std::cell::RefCell;
 use std::mem;
 use std::rc::Rc;
 
+use serde::Serialize;
+use serde::ser::Serializer;
+
 pub const MARKER: u8 = 0xC1;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -35,6 +38,15 @@ impl BoltFloat {
         bytes.put_u8(MARKER);
         bytes.put_f64(self.value);
         Ok(bytes.freeze())
+    }
+}
+
+impl Serialize for BoltFloat {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_f64(self.value)
     }
 }
 

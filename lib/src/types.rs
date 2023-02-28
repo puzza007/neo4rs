@@ -38,7 +38,10 @@ use std::cell::RefCell;
 use std::fmt::Display;
 use std::rc::Rc;
 
-#[derive(Debug, PartialEq, Clone)]
+use serde::Serialize;
+
+#[derive(Debug, PartialEq, Clone, Serialize)]
+#[serde(untagged)]
 pub enum BoltType {
     String(BoltString),
     Boolean(BoltBoolean),

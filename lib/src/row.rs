@@ -1,11 +1,14 @@
 use crate::types::*;
 use std::convert::TryInto;
 
+use serde::Serialize;
+
 /// Represents a row returned as a result of executing a query.
 ///
 /// A row is very similar to a `HashMap`, you can get the attributes using [`Row::get`] method.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Row {
+    #[serde(flatten)]
     attributes: BoltMap,
 }
 

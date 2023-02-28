@@ -6,6 +6,9 @@ use std::cell::RefCell;
 use std::mem;
 use std::rc::Rc;
 
+use serde::Serialize;
+use serde::ser::{Serializer, SerializeSeq};
+
 pub const TINY: u8 = 0x90;
 pub const SMALL: u8 = 0xD4;
 pub const MEDIUM: u8 = 0xD5;
@@ -142,6 +145,20 @@ impl BoltList {
 impl From<BoltList> for Vec<BoltType> {
     fn from(value: BoltList) -> Self {
         value.value
+    }
+}
+
+impl Serialize for BoltList
+{
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut seq = serializer.serialize_seq(Some(self.value.len()))?;
+        for element in &self.value {
+            seq.serialize_element(&element)?;
+        }
+        seq.end()
     }
 }
 
